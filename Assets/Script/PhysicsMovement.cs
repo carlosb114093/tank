@@ -102,14 +102,7 @@ public class PhysicsMovement : MonoBehaviour
 
     public void HandleWin()
     {
-        GameManager gameManager = FindObjectOfType<GameManager>();
-        if (gameManager != null)
-        {
-            gameManager.GameOverWin(true);
-        }
-        else
-        {
-            Debug.LogError("No se encontró el GameManager en la escena.");
-        }
+      GameManager.Instance.GameOverWin(true);  
+        
     }
 }

@@ -8,7 +8,7 @@ public class Countdown : MonoBehaviour
 
     void Update()
     {
-        GameManager gameManager = FindObjectOfType<GameManager>();
+        
         if (countdownTime > 0)
         {
             countdownTime -= Time.deltaTime;
@@ -24,9 +24,6 @@ public class Countdown : MonoBehaviour
                 timeCounter.text = $"Tiempo Restante: {timeRemaining}";
             }
         }
-        else
-        {
-            //gameManager.GameOverWin(true);
-        }
+        
     }
 }

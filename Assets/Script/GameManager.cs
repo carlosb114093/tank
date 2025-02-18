@@ -6,72 +6,71 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    
+    public static GameManager Instance { get; private set; } // Singleton
+
     public GameObject victoryText;
-    [SerializeField]bool isPaused, didLose;
-    Transform doorLevel;
-    ObstacleSpawner ObstacleSpawner;    
-    float timeToWin; 
-    public GameObject loserText;   
-    private void Start() {
-     
-        //Referenciamos el script que instancia los obstaculos/enemigos/objetos/etc
-        ObstacleSpawner = FindAnyObjectByType<ObstacleSpawner>();
-        
-    }
-    private void Update() {
-        if(!didLose)
+    public GameObject loserText;
+    
+    [SerializeField] private bool isPaused, didLose;
+    private Transform doorLevel;
+    private ObstacleSpawner obstacleSpawner;    
+    private float timeToWin; 
+
+    private void Awake()
+    {
+        // Aplicamos el Singleton
+        if (Instance == null)
         {
-            //Si no perdimos, seguimos contando tiempo
-            timeToWin += Time.deltaTime;
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject); // No destruir al cambiar de escena
+        }
+        else
+        {
+            Destroy(gameObject); // Si ya hay una instancia, se destruye este objeto
+            return;
+        }
+    }
+
+    private void Start() {
+        obstacleSpawner = FindAnyObjectByType<ObstacleSpawner>(); // Referencia al spawner
+    }
+
+    private void Update() {
+        if (!didLose)
+        {
+            timeToWin += Time.deltaTime; // Contador de tiempo si no se ha perdido
         }
 
-
-        //si pasamos el tiempo limite, perdemos y paramos ejecución ejecutando el GameOverWin()
-        if(timeToWin >= 30f)
+        if (timeToWin >= 30f)
         {
             GameOverLose(true);
             timeToWin = 0;
         }
-        
-
     }
     
-    //Se ejecuta cuando perdemos y hace todo lo referente a ello (Reiniciar la escena, devovler valores a defecto);   
     public void GameOverLose(bool lose)
     {
-        if(lose){            
-            //Esta línea me permite cargar scenes de unity.
+        if (lose)
+        {            
             loserText.SetActive(true);
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
-    //Se ejecuta cuando ganamos y hace todo lo referente a ello (cargar neuvo nivel, darnos feedback, etc);   
+
     public void GameOverWin(bool didWin)
     {
-        if(didWin)
+        if (didWin)
         {
-            ObstacleSpawner.canSpawn = false;
-            victoryText.SetActive(true); // Activa el mensaje
+            obstacleSpawner.canSpawn = false;
+            victoryText.SetActive(true);
             Time.timeScale = 0; // Pausa el juego
-          
         }
     }
 
-    //Método para pausar el juego
-     void PauseGame()
+    public void PauseGame()
     {
         isPaused = !isPaused;
-        
-        if(isPaused)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
+        Time.timeScale = isPaused ? 0 : 1;
     }
-    
-}    
+}
 

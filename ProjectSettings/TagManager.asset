@@ -10,6 +10,7 @@ TagManager:
   - Loose
   - Lose
   - Boundary
+  - Enemy
   layers:
   - Default
   - TransparentFX
