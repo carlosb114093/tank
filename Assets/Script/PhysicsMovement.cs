@@ -17,7 +17,7 @@ public class PhysicsMovement : MonoBehaviour
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody>();
-        SoundManager.Instance.PlayBackgroundMusic(backgroundMusic);
+        AudioManager.Instance.PlayMusic(backgroundMusic);
     }
 
     void Update()
@@ -29,11 +29,7 @@ public class PhysicsMovement : MonoBehaviour
             RotateTowardsMovement();
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-{
-    // Reproducir efecto de sonido al saltar
-    SoundManager.Instance.PlaySoundEffect(jumpSound);
-}
+   
     }
 
     void FixedUpdate()
@@ -62,6 +58,7 @@ public class PhysicsMovement : MonoBehaviour
     {
         // Aplicar salto con física
         playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+         AudioManager.Instance.PlaySFX(jumpSound);
     }
 
     private void OnCollisionEnter(Collision other)

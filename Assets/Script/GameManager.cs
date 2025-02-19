@@ -1,4 +1,4 @@
-//using UnityEditor.PackageManager;
+using System.Collections; 
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -17,19 +17,23 @@ public class GameManager : MonoBehaviour
     private float timeToWin; 
 
     private void Awake()
+{
+    if (Instance == null)
     {
-        // Aplicamos el Singleton
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject); // No destruir al cambiar de escena
-        }
-        else
-        {
-            Destroy(gameObject); // Si ya hay una instancia, se destruye este objeto
-            return;
-        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
+    else
+    {
+        Destroy(gameObject);
+        return;
+    }
+    
+    if (loserText != null)
+    {
+        DontDestroyOnLoad(loserText);
+    }
+}
 
     private void Start() {
         obstacleSpawner = FindAnyObjectByType<ObstacleSpawner>(); // Referencia al spawner
@@ -48,14 +52,23 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void GameOverLose(bool lose)
+public void GameOverLose(bool lose)
+{
+    if (lose)
     {
-        if (lose)
-        {            
+        if (loserText != null)
+        {
             loserText.SetActive(true);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
+        StartCoroutine(ReloadScene());
     }
+}
+
+private IEnumerator ReloadScene()
+{
+    yield return new WaitForSeconds(0.5f); // Pequeño retraso
+    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+}
 
     public void GameOverWin(bool didWin)
     {
