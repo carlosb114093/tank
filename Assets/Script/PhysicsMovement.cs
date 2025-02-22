@@ -8,24 +8,24 @@ public class PhysicsMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float rotationSpeed = 10f;
     public float jumpForce = 0f;
-    public float flySpeed = 1f; // Velocidad de ascenso/descenso en el eje Y
+    public float flySpeed = 1f; 
+    public float minHeight = 1.5f; // Altura mínima del UFO
+    public float hoverForce = 10f; // Fuerza de levitación
+    public float hoverDamping = 5f; // Suaviza la estabilización
     [SerializeField] private Rigidbody playerRigidbody;
     private Vector3 moveDirection;
     public bool isGrounded;
     public AudioClip backgroundMusic;
     public AudioClip jumpSound;  
-    private bool hasPowerup = false; 
-    private bool canJump = false;     
-    public GameObject powerupIndicator;
+    private bool hasPowerup = false;            
     public GameObject jumpFlame;
-    public GameObject tanque; // Referencia al tanque
-    public GameObject UFO;
-    private bool isControllingTank = true; 
+    private Positions positionScript;
+    
     // Cámara principal
      
     void Start()
     {
-        playerRigidbody = GetComponent<Rigidbody>();
+         playerRigidbody = GetComponent<Rigidbody>();
         AudioManager.Instance.PlayMusic(backgroundMusic);
     }
 
@@ -37,35 +37,60 @@ public class PhysicsMovement : MonoBehaviour
         {
             RotateTowardsMovement();
         }
+        
+        
     }
 
     void FixedUpdate()
     {
         ApplyPhysicsMovement();
+         MaintainHeight();
+        void FixedUpdate()
+{
+    float groundDistance = 1.5f; // Distancia mínima del suelo
+    RaycastHit hit;
+
+    if (Physics.Raycast(transform.position, Vector3.down, out hit, groundDistance))
+    {
+        // Si el UFO está muy cerca del suelo, no lo dejes bajar más
+        if (hit.collider.CompareTag("Floor"))
+        {
+            Vector3 newPosition = transform.position;
+            newPosition.y = hit.point.y + groundDistance; // Mantiene una distancia segura del suelo
+            transform.position = newPosition;
+        }
+    }
+} 
     }
 
     private void HandleInput()
     {
+        //asigno controles para los 3 ejes
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
         ascend = Input.GetAxis("Fly");
 
+        //guardo el movimiento en un vector
         moveDirection = new Vector3(horizontal, ascend, vertical).normalized;
 
-        // Solo permitir el salto si tiene el powerup y está en el suelo
-        if (Input.GetKeyDown(KeyCode.E)  && hasPowerup)
+        // Solo permitir el salto si tiene el powerup 
+        if (Input.GetKeyDown(KeyCode.E)  && hasPowerup)        
         {
             
             ApplyJump(true);
             
             
         }
-        if (Input.GetKeyDown(KeyCode.T)  && hasPowerup)
+        if (Input.GetKeyDown(KeyCode.T)) // Si se presiona "T", cambiar de vehículo
         {
-            
-            
-            SwitchVehicle(true);
-            
+            if (positionScript != null)
+            {
+                positionScript.SwitchVehicle();
+            }
+            else
+            {
+                Debug.LogWarning("No se encontró el script Position en la escena.");
+            }
         }
     }
 
@@ -112,32 +137,13 @@ public class PhysicsMovement : MonoBehaviour
 
         if (other.CompareTag("PowerupJ"))
         {
-            hasPowerup = true;
-            powerupIndicator.gameObject.SetActive(true);
+            hasPowerup = true;            
             Destroy(other.gameObject);
             StartCoroutine(PowerupCountdownRoutine()); // Iniciar la corrutina correctamente
             Debug.Log("Trigger: Powerup activado");
         }
-    }
-
-    void SwitchVehicle(bool controlTank)
-    {
-        isControllingTank = !isControllingTank;
-        SetActiveVehicle(isControllingTank);
-    }
-
-    void SetActiveVehicle(bool controlTank)
-    {
-        // Activar el tanque y desactivar el UFO, o viceversa
-        tanque.GetComponent<PhysicsMovement>().enabled = controlTank;
-        tanque.GetComponent<Rigidbody>().isKinematic = !controlTank; // Evita colisiones cuando está inactivo
-
-        UFO.GetComponent<PhysicsMovement>().enabled = !controlTank;
-        UFO.GetComponent<Rigidbody>().isKinematic = controlTank;
-    }
-
-    
-
+    }     
+   
     private void ApplyJump(bool canJump)
     {    
             Rigidbody rb = GetComponent<Rigidbody>();
@@ -146,21 +152,34 @@ public class PhysicsMovement : MonoBehaviour
             AudioManager.Instance.PlaySFX(jumpSound);
             
         
-    }    
-
-    
+    }        
 
     IEnumerator PowerupCountdownRoutine()
     {
         yield return new WaitForSeconds(30);
-        hasPowerup = false;
-        powerupIndicator.gameObject.SetActive(false);
+        hasPowerup = false;       
         Debug.Log("Power up finalizado");
     }
 
     public void HandleWin()
     {
         GameManager.Instance.GameOverWin(true);  
+    }
+
+    void MaintainHeight()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity))
+        {
+            float distanceToGround = hit.distance;
+
+            if (distanceToGround < minHeight)
+            {
+                float liftForce = (minHeight - distanceToGround) * hoverForce;
+                playerRigidbody.AddForce(Vector3.up * liftForce, ForceMode.Acceleration);
+                Debug.Log("Raycast");
+            }
+        }
     }
 }
 

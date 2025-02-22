@@ -1,38 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using UnityEngine;
+
 public class PushPlayer : MonoBehaviour
 {
     private Transform playerTransform;
-    private Vector3 playerGroundPos;
+    private Vector3 targetPosition;
     public float speed = 5f;
-    public float jumpForce = 7f; // Fuerza del salto
+    public float jumpForce = 7f;
     private float time;
     private Rigidbody rb;
     private float lastPlayerY;
-     public Text loseText;
+    public float pushForce = 10f; // Fuerza con la que empujará al jugador
+    public float rotationSpeed = 5f; // Velocidad de rotación del enemigo hacia el jugador
 
     void Start()
     {
-        // Referencia a la posición del jugador
-        playerTransform = GameObject.FindWithTag("Player").GetComponent<Transform>();
+        playerTransform = GameObject.FindWithTag("Player").transform;
         rb = GetComponent<Rigidbody>();
 
         if (playerTransform != null)
         {
-            lastPlayerY = playerTransform.position.y; // Guardamos la altura inicial
-        }
-
-        // Encuentra el texto "You Lose" en la escena
-        if (loseText == null)
-        {
-            loseText = GameObject.Find("LoseText")?.GetComponent<Text>();
-        }
-
-        // Asegura que el texto esté oculto al inicio
-        if (loseText != null)
-        {
-            loseText.gameObject.SetActive(false);
+            lastPlayerY = playerTransform.position.y; // Guarda la posición inicial del jugador en Y
         }
     }
 
@@ -40,8 +30,23 @@ public class PushPlayer : MonoBehaviour
     {
         if (playerTransform == null) return;
 
-        // Guardar solo coordenadas en X y Z para seguir al jugador
-        playerGroundPos = new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z);
+        // Guardar la posición del jugador en los tres ejes
+        targetPosition = playerTransform.position;
+
+        // Moverse suavemente hacia el jugador en X, Y y Z
+        transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
+
+        // Hacer que el enemigo gire hacia el jugador
+        RotateTowardsPlayer();
+
+        // Si el jugador sube significativamente en Y, hacer saltar este objeto
+        if (playerTransform.position.y > lastPlayerY + 0.2f)
+        {
+            Jump();
+        }
+
+        // Actualizar la última posición en Y del jugador
+        lastPlayerY = playerTransform.position.y;
 
         // Contador de tiempo para destruir el objeto después de 3 segundos
         time += Time.deltaTime;
@@ -49,18 +54,6 @@ public class PushPlayer : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        // Movimiento del objeto persiguiendo al jugador
-        transform.position = Vector3.Lerp(transform.position, playerGroundPos, speed * Time.deltaTime);
-
-        // Detectar si el jugador saltó
-        if (playerTransform.position.y > lastPlayerY + 0.1f) // Si el jugador sube en Y
-        {
-            Jump();
-        }
-
-        // Actualizar la última posición en Y del jugador
-        lastPlayerY = playerTransform.position.y;
     }
 
     void Jump()
@@ -71,4 +64,40 @@ public class PushPlayer : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
-} 
+
+    // Hacer que el enemigo gire suavemente hacia el jugador
+    void RotateTowardsPlayer()
+    {
+        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        direction.y = 0f; // Mantener la rotación solo en el plano XZ (evita inclinaciones raras)
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    // Detectar colisión con el jugador y empujarlo
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("¡Enemigo tocó al jugador y lo empuja!");
+
+            Rigidbody playerRb = collision.gameObject.GetComponent<Rigidbody>();
+
+            if (playerRb != null)
+            {
+                // Calcular la dirección de empuje desde el enemigo hacia el jugador
+                Vector3 pushDirection = collision.transform.position - transform.position;
+                pushDirection.y = 0f; // Evita empujarlo demasiado alto
+
+                // Aplicar fuerza de empuje
+                playerRb.AddForce(pushDirection.normalized * pushForce, ForceMode.Impulse);
+            }
+        }
+    }
+}
+
+
