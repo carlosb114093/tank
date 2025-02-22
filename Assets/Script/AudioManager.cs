@@ -6,8 +6,11 @@ using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance {get; private set;}
-    [SerializeField] AudioSource sfxAudio, musicAudio;
+    [SerializeField] AudioSource sfxAudio, musicAudio;    
     public AudioClip initialMusic;
+    [SerializeField] AudioMixer master;
+    [Range (-5,5)]
+    public float musicVolume, sfxVolume;
 
     private void Awake() {
         if(Instance == null)
@@ -27,6 +30,12 @@ public class AudioManager : MonoBehaviour
         InitialPlayMusic(initialMusic);
     }
 
+    private void Update(){
+     MusicVolumeControl (musicVolume);
+     SFXVolumeControl (sfxVolume);
+
+    }
+
     public void PlaySFX(AudioClip clip)
     {
         sfxAudio.PlayOneShot(clip);
@@ -43,5 +52,13 @@ public class AudioManager : MonoBehaviour
         musicAudio.clip = clip;
         musicAudio.Play();
         musicAudio.loop = true;
+    }
+
+    public void MusicVolumeControl (float volume){
+        master.SetFloat ("Music", Mathf.Log10(volume) * 20);
+    }
+
+    public void SFXVolumeControl(float volume){
+        master.SetFloat ("SFX", Mathf.Log10(volume) * 20);
     }
 }

@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     private Transform doorLevel;
     private ObstacleSpawner obstacleSpawner;    
     private float timeToWin; 
+    [SerializeField] private GameObject red;
+    [SerializeField] private GameObject green;
 
     private void Awake()
 {
@@ -59,6 +61,14 @@ public void GameOverLose(bool lose)
         if (loserText != null)
         {
             loserText.SetActive(true);
+            if (red != null) // Verificar si está asignado
+                {
+                    red.SetActive(true); 
+                }
+                else
+                {
+                    Debug.LogError("red no se asignando.");
+                }
         }
         StartCoroutine(ReloadScene());
     }
@@ -66,7 +76,7 @@ public void GameOverLose(bool lose)
 
 private IEnumerator ReloadScene()
 {
-    yield return new WaitForSeconds(0.5f); // Pequeño retraso
+    yield return new WaitForSeconds(0.3f); // Pequeño retraso
     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 }
 
@@ -78,6 +88,16 @@ private IEnumerator ReloadScene()
             victoryText.SetActive(true);
             Time.timeScale = 0; // Pausa el juego
         }
+
+        if (green != null) // Verificar si está asignado
+                {
+                    green.SetActive(true); 
+                }
+                else
+                {
+                    Debug.LogError("green no ha sido asignado en el Inspector.");
+                }
+             
     }
 
     public void PauseGame()

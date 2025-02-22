@@ -11,6 +11,8 @@ TagManager:
   - Lose
   - Boundary
   - Enemy
+  - Powerup
+  - PowerupJ
   layers:
   - Default
   - TransparentFX

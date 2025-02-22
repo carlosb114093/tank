@@ -12,6 +12,8 @@ public class PlaneMovement : MonoBehaviour
     private bool isTakingOff = true;
     private float currentSpeed;
     private float liftAngle = 0f;
+    private bool hasPowerup = false; 
+    public GameObject powerupIndicator;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,4 +45,6 @@ public class PlaneMovement : MonoBehaviour
             }
         }
     }
+
+    
 }
