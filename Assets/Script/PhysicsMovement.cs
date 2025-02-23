@@ -18,15 +18,15 @@ public class PhysicsMovement : MonoBehaviour
     public AudioClip backgroundMusic;
     public AudioClip jumpSound;  
     private bool hasPowerup = false;            
-    public GameObject jumpFlame;
-    private Positions positionScript;
-    
-    // Cámara principal
+ 
+ 
      
     void Start()
     {
-         playerRigidbody = GetComponent<Rigidbody>();
+         playerRigidbody = GetComponent<Rigidbody>();         
         AudioManager.Instance.PlayMusic(backgroundMusic);
+        
+          
     }
 
     void Update()
@@ -81,17 +81,15 @@ public class PhysicsMovement : MonoBehaviour
             
             
         }
-        if (Input.GetKeyDown(KeyCode.T)) // Si se presiona "T", cambiar de vehículo
+
+        if (Input.GetKeyDown(KeyCode.P))        
         {
-            if (positionScript != null)
-            {
-                positionScript.SwitchVehicle();
-            }
-            else
-            {
-                Debug.LogWarning("No se encontró el script Position en la escena.");
-            }
+            
+            GameManager.Instance.PauseGame();
+                      
+            
         }
+       
     }
 
     private void ApplyPhysicsMovement()
