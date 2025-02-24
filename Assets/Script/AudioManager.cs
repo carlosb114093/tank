@@ -55,10 +55,10 @@ public class AudioManager : MonoBehaviour
     }
 
     public void MusicVolumeControl (float volume){
-        master.SetFloat ("Music", Mathf.Log10(volume) * 20);
+        master.SetFloat ("Music", volume);
     }
 
     public void SFXVolumeControl(float volume){
-        master.SetFloat ("SFX", Mathf.Log10(volume) * 20);
+        master.SetFloat ("SFX", volume);
     }
 }
