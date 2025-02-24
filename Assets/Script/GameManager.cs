@@ -8,16 +8,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    [SerializeField] private bool isPaused, didLose;
-    private Transform doorLevel;
+    [SerializeField] private bool isPaused, didLose;    
     private ObstacleSpawner obstacleSpawner;
     private float timeToWin;
+    private bool juegoIniciado;
 
     [Header("Prefabs (Opcional)")]
     [SerializeField] private GameObject redPrefab;
     [SerializeField] private GameObject greenPrefab;
     [SerializeField] private GameObject red;
     [SerializeField] private GameObject green;
+    [SerializeField] private string allowedScene = "Orange_presetScene Lite";
 
     private void Awake()
     {
@@ -39,12 +40,18 @@ public class GameManager : MonoBehaviour
         FindGameObjects(); // Buscar o instanciar objetos
         red.SetActive(false);
         green.SetActive(false);
+        juegoIniciado=true;
+        if (SceneManager.GetActiveScene().name != allowedScene)
+        {
+            Debug.Log("Este script no se ejecuta en esta escena.");
+            enabled = false; // Desactiva el script
+        }
         
     }
 
     private void Update()
     {
-        if (!didLose) 
+        if (juegoIniciado) 
         {
             timeToWin += Time.deltaTime;
         }
@@ -156,6 +163,32 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded; // Desuscribirse del evento para evitar errores
+    }
+
+    public void StartGame( bool start )
+    {
+    if(start){
+    Time.timeScale = 1; // Inicia el tiempo del juego
+    Countdown.Instance.StartCountdown(); 
+    juegoIniciado=true;
+    }
+    }
+
+     public void Reset(bool star)
+    {
+        // 1. Restablecer variables del juego (opcional)
+        // Puedes restablecer aquí cualquier variable que necesites reiniciar, como la puntuación, la vida del jugador, etc.
+        // Ejemplo:
+        // puntuacion = 0;
+        // vidaJugador = 100;
+
+        // 2. Cargar la escena del menú principal
+        SceneManager.LoadScene("menu"); // Reemplaza "NombreDeLaEscenaDelMenu" con el nombre de tu escena de menú
+
+        // 3. (Opcional) Si quieres que el juego comience sin pausar al volver al menú
+        Time.timeScale = 1;
+
+        Debug.Log("Juego reiniciado y vuelta al menú.");
     }
 }
 

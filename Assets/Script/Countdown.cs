@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Countdown : MonoBehaviour
 {
-    // ✅ Singleton: La única instancia accesible globalmente
+    
     public static Countdown Instance { get; private set; }
 
     public TextMeshProUGUI timeCounter;
@@ -18,37 +18,45 @@ public class Countdown : MonoBehaviour
     void Awake()
     {
         hurryup.SetActive(false);
-        // ✅ Verifica si ya hay una instancia
+        
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Evita que se destruya al cambiar de escena
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {
-            Destroy(gameObject); // Elimina duplicados si ya existe un `Countdown`
+            Destroy(gameObject); 
         }
     }
 
+
     void Update()
     {
-        if (gameStarted && countdownTime > 0)
-        {
-            countdownTime -= Time.deltaTime;
-            int timeRemaining = Mathf.CeilToInt(countdownTime);
-            timeCounter.text = "Tiempo restante " + timeRemaining;
+    if (gameStarted && Time.timeScale > 0 && countdownTime > 0)
+    {
+        countdownTime = Mathf.Max(countdownTime - Time.deltaTime, 0); // Evita valores negativos
+        int timeRemaining = Mathf.CeilToInt(countdownTime);
+        timeCounter.text = "Tiempo restante " + timeRemaining;
 
-            if (countdownTime < 6)
-            {
-                timeCounter.text = "Hurry up! " + timeRemaining;
-                hurryup?.SetActive(countdownTime > 0);
-            }
+        if (countdownTime < 6)
+        {
+            timeCounter.text = "Hurry up! " + timeRemaining;
+            hurryup?.SetActive(countdownTime > 0);
         }
+
+        if (countdownTime <= 0)  // Mejor usar <= para evitar errores
+        {
+            GameManager.Instance.GameOverLose(true);
+        }
+    }
+
+    
     }
 
     public void StartCountdown()
     {
         gameStarted = true;
-        timeCounter.gameObject.SetActive(true);
+       // timeCounter.gameObject.SetActive(true);
     }
 }
