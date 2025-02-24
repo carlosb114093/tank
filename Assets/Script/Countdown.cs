@@ -11,7 +11,7 @@ public class Countdown : MonoBehaviour
     public static Countdown Instance { get; private set; }
 
     public TextMeshProUGUI timeCounter;
-    [SerializeField] private float countdownTime = 10f;
+    [SerializeField] private float countdownTime = 40f;
     [SerializeField] private GameObject hurryup;
     private bool gameStarted = false;
 

@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
             timeToWin += Time.deltaTime;
         }
 
-        if (timeToWin >= 10f)
+        if (timeToWin >= 40f)
         {
             GameOverLose(true);
             timeToWin = 0;
@@ -105,9 +105,10 @@ public class GameManager : MonoBehaviour
     {
         if (lose)
         {
-            Time.timeScale = 0; // Pausa el juego
+             // Pausa el juego
             if (red != null)
             {
+                Time.timeScale = 0;
                 red.SetActive(true);
                 Debug.Log("Red activado correctamente.");
             }
@@ -122,7 +123,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ReloadScene()
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(0.2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Time.timeScale = 1; // Restaurar tiempo después de recargar
     }

@@ -1116,8 +1116,8 @@ GameObject:
   - component: {fileID: 59042427}
   - component: {fileID: 59042426}
   m_Layer: 0
-  m_Name: PowerUp (1)
-  m_TagString: PowerupJ
+  m_Name: Speed
+  m_TagString: PowerUp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1142,7 +1142,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 977b6d7a9501307478a6fab8d0743ae9, type: 2}
+  - {fileID: 2100000, guid: 6e8a195dd7103c2429c74dfc158c1e79, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1202,7 +1202,7 @@ Transform:
   m_GameObject: {fileID: 59042425}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -90.14, y: 0.85, z: 42.27}
+  m_LocalPosition: {x: -90.14, y: 11.38, z: 114.9}
   m_LocalScale: {x: 1.8807, y: 2.0222592, z: 1.9855}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8636,7 +8636,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2d713d459dc98d1499b89ad535a845f0, type: 2}
+  - {fileID: 2100000, guid: a7d53124b7291a24b96972b109b9dae7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12510,7 +12510,7 @@ Transform:
   m_GameObject: {fileID: 791134630}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.001, y: -0.012, z: -0.055}
+  m_LocalPosition: {x: -0.001, y: -0.136, z: -0.055}
   m_LocalScale: {x: 0.53171694, y: 0.49449646, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17483,7 +17483,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 977b6d7a9501307478a6fab8d0743ae9, type: 2}
+  - {fileID: 2100000, guid: 142b87b676abe494a9565d0baa305987, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17591,7 +17591,7 @@ GameObject:
   - component: {fileID: 1086194130}
   - component: {fileID: 1079155294}
   m_Layer: 0
-  m_Name: PowerUp
+  m_Name: Jump
   m_TagString: PowerupJ
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17606,7 +17606,7 @@ Transform:
   m_GameObject: {fileID: 1081143974}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -90.14, y: 0.999, z: 2.364}
+  m_LocalPosition: {x: -68.1, y: 0.999, z: 78.8}
   m_LocalScale: {x: 1.8807, y: 2.0222592, z: 1.9855}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -32243,7 +32243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6515eae9bdbc404e9d6d82eac5edce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
+  speed: 20
   minBounds: {x: -100.8, y: -1, z: -20}
   maxBounds: {x: 100, y: 30, z: 180}
 --- !u!135 &1947338239
@@ -32326,7 +32326,7 @@ Transform:
   m_GameObject: {fileID: 1947338237}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -90.24, y: 0, z: -4}
+  m_LocalPosition: {x: -43.7, y: 37, z: 105.7}
   m_LocalScale: {x: 0.99846, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -36257,6 +36257,7 @@ GameObject:
   - component: {fileID: 5228303159385050776}
   - component: {fileID: 806781974338966702}
   - component: {fileID: 4957641962794229926}
+  - component: {fileID: 5228303159385050777}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -36849,7 +36850,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeCounter: {fileID: 5333954957356672985}
-  countdownTime: 10
+  countdownTime: 40
   hurryup: {fileID: 1222630810918014738}
 --- !u!1 &5026622179984487770
 GameObject:
@@ -36942,6 +36943,20 @@ Transform:
   - {fileID: 1054131536}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5228303159385050777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481798189036265420}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81b4dca088a550242b29c56bc31b610c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedMultiplier: 2
+  boostDuration: 10
 --- !u!33 &5228779153923844906
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -37327,8 +37342,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -24, y: 66}
-  m_SizeDelta: {x: 1577, y: 1315}
+  m_AnchoredPosition: {x: -22, y: 66}
+  m_SizeDelta: {x: 1580, y: 1315}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &7696555573801094845
 Transform:
@@ -37410,6 +37425,7 @@ GameObject:
   - component: {fileID: 8128413375533840938}
   - component: {fileID: 8128413375533840937}
   - component: {fileID: 8128413375533840936}
+  - component: {fileID: 8128413375533840941}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Player
@@ -37533,6 +37549,8 @@ MonoBehaviour:
   isGrounded: 0
   backgroundMusic: {fileID: 8300000, guid: 90ac3a52dce5f429e89dc366e19f80a8, type: 3}
   jumpSound: {fileID: 8300000, guid: a4a9327e98855524c846cc8e2f559e96, type: 3}
+  speedMultiplier: 2
+  boostDuration: 10
 --- !u!54 &8128413375533840940
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -37560,6 +37578,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 84
   m_CollisionDetection: 0
+--- !u!114 &8128413375533840941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7986189128457468849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81b4dca088a550242b29c56bc31b610c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedMultiplier: 2
+  boostDuration: 10
 --- !u!23 &8138413221635182145
 MeshRenderer:
   m_ObjectHideFlags: 0

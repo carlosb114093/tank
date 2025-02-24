@@ -18,13 +18,17 @@ public class PhysicsMovement : MonoBehaviour
     public AudioClip backgroundMusic;
     public AudioClip jumpSound;  
     private bool hasPowerup = false;            
- 
+    public float speedMultiplier = 2f; // Factor de aumento de velocidad
+    public float boostDuration = 10f; // Duración del efecto en segundos
+    private float originalSpeed;
+    private bool isBoosted = false;
  
      
     void Start()
     {
-         playerRigidbody = GetComponent<Rigidbody>();         
+        playerRigidbody = GetComponent<Rigidbody>();         
         AudioManager.Instance.PlayMusic(backgroundMusic);
+        originalSpeed = playerRigidbody.velocity.magnitude;
         
           
     }
@@ -105,6 +109,8 @@ public class PhysicsMovement : MonoBehaviour
         {
             isGrounded = true;
         }
+
+        
     }
 
     private void OnCollisionExit(Collision other)
@@ -140,6 +146,21 @@ public class PhysicsMovement : MonoBehaviour
             StartCoroutine(PowerupCountdownRoutine()); // Iniciar la corrutina correctamente
             Debug.Log("Trigger: Powerup activado");
         }
+        if (other.CompareTag("PowerUp") && !isBoosted)
+        {
+            StartCoroutine(BoostSpeed());
+            Destroy(other.gameObject); // Destruir el power-up tras recogerlo
+        }
+
+    }
+
+    private System.Collections.IEnumerator BoostSpeed()
+    {
+        isBoosted = true;
+        playerRigidbody.velocity *= speedMultiplier; // Aumenta la velocidad
+        yield return new WaitForSeconds(boostDuration);
+        playerRigidbody.velocity = playerRigidbody.velocity.normalized * originalSpeed; // Restablece la velocidad
+        isBoosted = false;
     }     
    
     private void ApplyJump(bool canJump)
